@@ -54,7 +54,7 @@ def generate_kpk_cert(input_pdf, out_dir, name_obj: TextElement, num_obj: TextEl
     packet = BytesIO()
     canvas_obj = canvas.Canvas(packet)
 
-    custom_font_path = resource_path("assets\Marcellus-Regular.ttf")  
+    custom_font_path = resource_path(os.path.join("assets", "Marcellus-Regular.ttf"))
     pdfmetrics.registerFont(TTFont('Marcellus', custom_font_path))
 
     # Set font and size
@@ -95,7 +95,8 @@ def generate_kpk_cert(input_pdf, out_dir, name_obj: TextElement, num_obj: TextEl
         pdf_writer.add_page(page)
 
     # Write the final output to a new PDF
-    with open(f'{out_dir}\\{name_dat}.pdf', 'wb') as output_file:
+    output_path = os.path.join(out_dir, f"{name_dat}.pdf")
+    with open(output_path, 'wb') as output_file:
         pdf_writer.write(output_file)
       
     print(f'Certificate Completed! {name_dat}')

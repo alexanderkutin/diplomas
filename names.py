@@ -70,7 +70,10 @@ def convert_names(filename, template, out_dir, name_params: TextElement, num_par
 
     # Load CSV file without header and assign column names
     input_file = filename  # Replace with the path to your input CSV file
-    df = pd.read_csv(input_file, header=None, encoding='utf-8', names=['Name', 'Nr', 'Sex'])
+    with open(input_file, encoding='utf-8') as _f:
+        _sample = _f.read(1024)
+    _sep = ';' if _sample.count(';') >= _sample.count(',') else ','
+    df = pd.read_csv(input_file, header=None, delimiter=_sep, encoding='utf-8', names=['Name', 'Nr', 'Sex'])
 
     # # Combine the modified first name and surname for the final output
     # df['Name_Surname_Dative'] = df['First_Name_Dative'] + ' ' + df['Surname_Dative']

@@ -6,6 +6,11 @@ import threading
 from certs import TextElement
 from names import convert_names
 
+NAME_X_OFFSET = 50
+NAME_Y_OFFSET = 79
+NUM_X_OFFSET = 40
+NUM_Y_OFFSET = 134
+
 # Redirect stdout to update in real-time within the Text widget
 class TextRedirector:
     def __init__(self, text_widget):
@@ -34,8 +39,8 @@ def run_function():
     csv_path = csv_path_var.get()
     output_folder = output_folder_var.get()
 
-    name_params = TextElement(None, 50, 79, 35)
-    num_params = TextElement(None, 40, 134, 20)
+    name_params = TextElement(None, name_x_var.get(), name_y_var.get(), 35)
+    num_params = TextElement(None, num_x_var.get(), num_y_var.get(), 20)
 
     if pdf_path and csv_path and output_folder:
         # Create a new window for output display
@@ -72,7 +77,7 @@ def select_output_folder():
 # Create the main window
 root = tk.Tk()
 root.title("File Path Selector")
-root.geometry("450x250")
+root.geometry("600x420")
 
 # Heading
 heading_label = tk.Label(root, text="Select Files and Output Folder", font=("Arial", 14))
@@ -83,23 +88,54 @@ pdf_path_var = tk.StringVar()
 csv_path_var = tk.StringVar()
 output_folder_var = tk.StringVar()
 
+# Offset variables with defaults matching TextElement construction
+name_x_var = tk.IntVar(value=NAME_X_OFFSET)
+name_y_var = tk.IntVar(value=NAME_Y_OFFSET)
+num_x_var = tk.IntVar(value=NUM_X_OFFSET)
+num_y_var = tk.IntVar(value=NUM_Y_OFFSET)
+
+entry_style = {
+    "width": 40,
+    "bg": "#d3d3d3",
+    "fg": "#111111",
+    "insertbackground": "#111111",
+}
+
 # PDF file selection
 tk.Label(root, text="PDF File:").grid(row=1, column=0, padx=10, pady=5)
-tk.Entry(root, textvariable=pdf_path_var, width=40).grid(row=1, column=1)
+tk.Entry(root, textvariable=pdf_path_var, **entry_style).grid(row=1, column=1)
 tk.Button(root, text="Browse", command=select_pdf).grid(row=1, column=2, padx=5)
 
 # CSV file selection
 tk.Label(root, text="CSV File:").grid(row=2, column=0, padx=10, pady=5)
-tk.Entry(root, textvariable=csv_path_var, width=40).grid(row=2, column=1)
+tk.Entry(root, textvariable=csv_path_var, **entry_style).grid(row=2, column=1)
 tk.Button(root, text="Browse", command=select_csv).grid(row=2, column=2, padx=5)
 
 # Output folder selection
 tk.Label(root, text="Output Folder:").grid(row=3, column=0, padx=10, pady=5)
-tk.Entry(root, textvariable=output_folder_var, width=40).grid(row=3, column=1)
+tk.Entry(root, textvariable=output_folder_var, **entry_style).grid(row=3, column=1)
 tk.Button(root, text="Browse", command=select_output_folder).grid(row=3, column=2, padx=5)
 
+# Name offset controls
+tk.Label(root, text="Name X/Y Offset:").grid(row=4, column=0, padx=10, pady=5)
+frame_name = tk.Frame(root)
+frame_name.grid(row=4, column=1, sticky="w")
+tk.Label(frame_name, text="X:").pack(side="left")
+tk.Spinbox(frame_name, textvariable=name_x_var, from_=-500, to=500, width=6).pack(side="left", padx=(2, 10))
+tk.Label(frame_name, text="Y:").pack(side="left")
+tk.Spinbox(frame_name, textvariable=name_y_var, from_=-500, to=500, width=6).pack(side="left", padx=2)
+
+# Number offset controls
+tk.Label(root, text="Number X/Y Offset:").grid(row=5, column=0, padx=10, pady=5)
+frame_num = tk.Frame(root)
+frame_num.grid(row=5, column=1, sticky="w")
+tk.Label(frame_num, text="X:").pack(side="left")
+tk.Spinbox(frame_num, textvariable=num_x_var, from_=-500, to=500, width=6).pack(side="left", padx=(2, 10))
+tk.Label(frame_num, text="Y:").pack(side="left")
+tk.Spinbox(frame_num, textvariable=num_y_var, from_=-500, to=500, width=6).pack(side="left", padx=2)
+
 # Run button
-tk.Button(root, text="Run", command=run_function).grid(row=4, column=1, pady=20)
+tk.Button(root, text="Run", command=run_function).grid(row=6, column=1, pady=20)
 
 # Run the application
 root.mainloop()
